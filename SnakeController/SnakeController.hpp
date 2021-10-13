@@ -35,6 +35,7 @@ public:
     void eat();
     void lose();
     bool collision();
+    void continueGame();
 
 private:
     struct Segment
