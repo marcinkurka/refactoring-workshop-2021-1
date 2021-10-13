@@ -34,6 +34,7 @@ public:
     bool checkStatus();
     void eat();
     void lose();
+    bool collision();
 
 private:
     struct Segment

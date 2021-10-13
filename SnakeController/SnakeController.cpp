@@ -87,6 +87,20 @@ void Controller::lose(){
     m_scorePort.send(std::make_unique<EventT<LooseInd>>());
 }
 
+bool Controller::collision(){
+    Segment const& currentHead = m_segments.front();    
+    Segment newHead;
+    newHead.x = currentHead.x + ((m_currentDirection & 0b01) ? (m_currentDirection & 0b10) ? 1 : -1 : 0);
+    newHead.y = currentHead.y + (not (m_currentDirection & 0b01) ? (m_currentDirection & 0b10) ? 1 : -1 : 0);
+    newHead.ttl = currentHead.ttl;
+    if (newHead.x < 0 or newHead.y < 0 or
+                       newHead.x >= m_mapDimension.first or
+                       newHead.y >= m_mapDimension.second){
+        return true;
+    } else return false;
+
+}
+
 void Controller::receive(std::unique_ptr<Event> e)
 {
     try {
@@ -107,9 +121,7 @@ void Controller::receive(std::unique_ptr<Event> e)
         if (not lost) {
             if (std::make_pair(newHead.x, newHead.y) == m_foodPosition) {
                 eat();
-            } else if (newHead.x < 0 or newHead.y < 0 or
-                       newHead.x >= m_mapDimension.first or
-                       newHead.y >= m_mapDimension.second) {
+            } else if (collision()) {
                        lose();
                 
                 lost = true;
