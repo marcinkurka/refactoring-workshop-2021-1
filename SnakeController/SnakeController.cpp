@@ -147,8 +147,7 @@ void Controller::receive(std::unique_ptr<Event> e)
             if (std::make_pair(newHead.x, newHead.y) == m_foodPosition) {
                 eat();
             } else if (collision()) {
-                       lose();
-                
+                lose();
                 lost = true;
             } else {
                 for (auto &segment : m_segments) {
