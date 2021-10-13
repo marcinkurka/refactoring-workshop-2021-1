@@ -33,6 +33,7 @@ public:
     void receive(std::unique_ptr<Event> e) override;
     bool checkStatus();
     void eat();
+    void lose();
 
 private:
     struct Segment

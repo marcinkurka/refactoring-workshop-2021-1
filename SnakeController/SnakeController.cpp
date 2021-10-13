@@ -71,7 +71,7 @@ bool Controller::checkStatus(){
         newHead.ttl = currentHead.ttl;
           for (auto segment : m_segments) {
             if (segment.x == newHead.x and segment.y == newHead.y) {
-                m_scorePort.send(std::make_unique<EventT<LooseInd>>());
+                lose();
                 return true;
                 }
             }
@@ -81,6 +81,10 @@ bool Controller::checkStatus(){
 void Controller::eat(){
     m_scorePort.send(std::make_unique<EventT<ScoreInd>>());
     m_foodPort.send(std::make_unique<EventT<FoodReq>>());
+}
+
+void Controller::lose(){
+    m_scorePort.send(std::make_unique<EventT<LooseInd>>());
 }
 
 void Controller::receive(std::unique_ptr<Event> e)
@@ -106,7 +110,8 @@ void Controller::receive(std::unique_ptr<Event> e)
             } else if (newHead.x < 0 or newHead.y < 0 or
                        newHead.x >= m_mapDimension.first or
                        newHead.y >= m_mapDimension.second) {
-                m_scorePort.send(std::make_unique<EventT<LooseInd>>());
+                       lose();
+                
                 lost = true;
             } else {
                 for (auto &segment : m_segments) {
